@@ -5,3 +5,6 @@ You can run the [example notebook in colab](https://colab.research.google.com/gi
 
 
 Is something broken?  Feel free to [create an issue](https://github.com/ArielLevineLabNINDS/SeqSeek-Classify-NN/issues).
+
+[![DOI](https://zenodo.org/badge/287574927.svg)](https://zenodo.org/badge/latestdoi/287574927)
+

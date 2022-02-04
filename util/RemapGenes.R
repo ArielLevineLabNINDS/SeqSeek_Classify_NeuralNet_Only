@@ -5,13 +5,14 @@ library(Matrix)
 
 mapReadGTF <- function(file,hasColumnNames){
   
+  regexPattern = "gene_id \"(ENSMUSG[0-9.]+)\";.+gene_name \"([[:print:]]+?)\"; .+"
   cnames = hasColumnNames
   if (!cnames) cnames=c("Chromosome","Source","Feature","Start","End","Score","Strand","Frame","Attributes") 
   
   gtf <- read_tsv(file,col_names = cnames, col_types = "ccccccccc", comment = '#') %>% 
     mutate(
-      gene_id    = gsub("gene_id \"(ENSMUSG\\d+)\";.+","\\1",Attributes),
-      gene_names = gsub(".+ gene_name \"([[:print:]]+?)\"; .+","\\1",Attributes) 
+      gene_id    = gsub(regexPattern,"\\1",Attributes),
+      gene_names = gsub(regexPattern,"\\2",Attributes) 
     ) %>% 
     select(gene_id,gene_names) %>% 
     distinct() %>%

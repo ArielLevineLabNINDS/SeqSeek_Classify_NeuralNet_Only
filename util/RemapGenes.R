@@ -4,11 +4,11 @@ library(Matrix)
 
 mapReadGTF <- function(file,hasColumnNames){
   
-  regxPattern = "gene_id \"(ENSMUSG\\d+)\";.+; gene_name \"([[:print:]]+)\"; gene_source.+"
+  regxPattern = "gene_id \"(ENSMUSG[0-9.]+)\";.+gene_name \"([[:print:]]+?)\"; .+"
   cnames = hasColumnNames
   if (!cnames) cnames=c("Chromosome","Source","Feature","Start","End","Score","Strand","Frame","Attributes") 
   
-  gtf <- read_tsv(file,col_names = cnames, col_types = "ccccccccc") %>% 
+  gtf <- read_tsv(file,col_names = cnames, col_types = "ccccccccc", comment = '#') %>% 
     mutate(
       gene_id    = gsub(regxPattern,"\\1",Attributes),
       gene_names = gsub(regxPattern,"\\2",Attributes) 
@@ -19,7 +19,7 @@ mapReadGTF <- function(file,hasColumnNames){
     # cause the count matrix to have duplicated gene names.  Seurat uses the make unique
     # function to make the gene names unique.  We're going to do the same.
     mutate(gene_names=make.unique(gene_names))
-    
+  
     return(gtf)
 }
 
@@ -58,7 +58,7 @@ mapGenes <- function(fromGenome,ToGenome,count_matrix){
   
   # now lets add the "missing" genes from the toGenome...
   missing_genes = setdiff(ToGenome$gene_names,rownames(count_matrix))
-  zeros = Matrix(0,nrow=length(missing_genes),ncol=dim(countMatrix)[2],dimnames = list(missing_genes,colnames(countMatrix)),sparse = T )
+  zeros = Matrix(0,nrow=length(missing_genes),ncol=dim(count_matrix)[2],dimnames = list(missing_genes,colnames(count_matrix)),sparse = T )
   x=rbind(count_matrix,zeros)
 
   # now lets set the order of the matrix...

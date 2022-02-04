@@ -2,7 +2,6 @@ library(tidyverse)
 library(Seurat)
 library(Matrix)
 
-
 mapReadGTF <- function(file,hasColumnNames){
   
   regxPattern = "gene_id \"(ENSMUSG[0-9.]+)\";.+gene_name \"([[:print:]]+?)\"; .+"

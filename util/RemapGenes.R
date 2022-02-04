@@ -5,14 +5,14 @@ library(Matrix)
 
 mapReadGTF <- function(file,hasColumnNames){
   
-  regexPattern = "gene_id \"(ENSMUSG[0-9.]+)\";.+gene_name \"([[:print:]]+?)\"; .+"
+  regxPattern = "gene_id \"(ENSMUSG[0-9.]+)\";.+gene_name \"([[:print:]]+?)\"; .+"
   cnames = hasColumnNames
   if (!cnames) cnames=c("Chromosome","Source","Feature","Start","End","Score","Strand","Frame","Attributes") 
   
   gtf <- read_tsv(file,col_names = cnames, col_types = "ccccccccc", comment = '#') %>% 
     mutate(
-      gene_id    = gsub(regexPattern,"\\1",Attributes),
-      gene_names = gsub(regexPattern,"\\2",Attributes) 
+      gene_id    = gsub(regxPattern,"\\1",Attributes),
+      gene_names = gsub(regxPattern,"\\2",Attributes) 
     ) %>% 
     select(gene_id,gene_names) %>% 
     distinct() %>%
@@ -21,7 +21,7 @@ mapReadGTF <- function(file,hasColumnNames){
     # function to make the gene names unique.  We're going to do the same.
     mutate(gene_names=make.unique(gene_names))
   
-  return(gtf)
+    return(gtf)
 }
 
 mapGenes <- function(fromGenome,ToGenome,count_matrix){
